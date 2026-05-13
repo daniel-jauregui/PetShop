@@ -1,9 +1,9 @@
-fastapi==0.115.0
-uvicorn==0.31.0
-sqlalchemy==2.0.35
-pydantic==2.9.2
-pydantic-settings==2.5.2
-httpx==0.27.2          # required by TestClient
-pytest==8.3.3
-pytest-anyio==0.0.0    # transitive; pinned for stability
-anyio==4.6.0
+fastapi>=0.115.0
+uvicorn>=0.31.0
+sqlalchemy>=2.0.35
+pydantic>=2.9.2
+pydantic-settings>=2.5.2
+httpx>=0.27.2          # required by TestClient
+pytest>=8.3.3
+pytest-anyio>=0.0.0    # transitive; pinned for stability
+anyio>=4.6.0
