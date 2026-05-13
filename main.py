@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -12,6 +13,8 @@ class Pet(BaseModel):
     name: str
     type: str
     age: int
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Ruta inicial
 @app.get("/")
