@@ -1,11 +1,19 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from app.models.pet import Pet
 from app.schemas.pet import PetCreate, PetUpdate
 
 
-def get_all_pets(db: Session) -> list[Pet]:
-    return db.query(Pet).all()
+def get_all_pets(db: Session, name: str | None = None, type: str | None = None, age: int | None = None) -> list[Pet]:
+    query = db.query(Pet)
+    if name:
+        query = query.filter(Pet.name.ilike(f"%{name}%"))
+    if type:
+        query = query.filter(Pet.type.ilike(f"%{type}%"))
+    if age is not None:
+        query = query.filter(Pet.age == age)
+    return query.all()
 
 
 def get_pet_by_id(db: Session, pet_id: int) -> Pet | None:

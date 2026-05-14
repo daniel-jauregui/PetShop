@@ -9,9 +9,14 @@ router = APIRouter(prefix="/pets", tags=["Pets"])
 
 
 @router.get("/", response_model=list[PetResponse])
-def list_pets(db: Session = Depends(get_db)):
-    """Return all pets."""
-    return pet_service.get_all_pets(db)
+def list_pets(
+    name: str | None = None,
+    type: str | None = None,
+    age: int | None = None,
+    db: Session = Depends(get_db),
+):
+    """Return all pets, optionally filtered by name, type, or age."""
+    return pet_service.get_all_pets(db, name=name, type=type, age=age)
 
 
 @router.get("/{pet_id}", response_model=PetResponse)

@@ -144,3 +144,61 @@ class TestDeletePet:
         client.delete(f"/api/v1/pets/{pet_id}")
         ids = [p["id"] for p in client.get("/api/v1/pets/").json()]
         assert pet_id not in ids
+
+
+# ---------------------------------------------------------------------------
+# GET /api/v1/pets/ with filters
+# ---------------------------------------------------------------------------
+
+class TestFilterPets:
+    def test_filter_by_name(self, client):
+        client.post("/api/v1/pets/", json={"name": "Buddy", "type": "dog", "age": 3})
+        client.post("/api/v1/pets/", json={"name": "Max", "type": "dog", "age": 5})
+        client.post("/api/v1/pets/", json={"name": "Luna", "type": "cat", "age": 2})
+
+        response = client.get("/api/v1/pets/?name=Buddy")
+        assert response.status_code == 200
+        names = [p["name"] for p in response.json()]
+        assert "Buddy" in names
+        assert "Max" not in names
+        assert "Luna" not in names
+
+    def test_filter_by_type(self, client):
+        client.post("/api/v1/pets/", json={"name": "Buddy", "type": "dog", "age": 3})
+        client.post("/api/v1/pets/", json={"name": "Luna", "type": "cat", "age": 2})
+
+        response = client.get("/api/v1/pets/?type=cat")
+        assert response.status_code == 200
+        types = [p["type"] for p in response.json()]
+        assert "cat" in types
+        assert "dog" not in types
+
+    def test_filter_by_age(self, client):
+        client.post("/api/v1/pets/", json={"name": "Buddy", "type": "dog", "age": 3})
+        client.post("/api/v1/pets/", json={"name": "Luna", "type": "cat", "age": 3})
+        client.post("/api/v1/pets/", json={"name": "Max", "type": "dog", "age": 5})
+
+        response = client.get("/api/v1/pets/?age=3")
+        assert response.status_code == 200
+        ages = [p["age"] for p in response.json()]
+        assert all(a == 3 for a in ages)
+
+    def test_filter_by_name_partial_match(self, client):
+        client.post("/api/v1/pets/", json={"name": "Buddy", "type": "dog", "age": 3})
+        client.post("/api/v1/pets/", json={"name": "Buddy2", "type": "dog", "age": 2})
+
+        response = client.get("/api/v1/pets/?name=Buddy")
+        assert response.status_code == 200
+        names = [p["name"] for p in response.json()]
+        assert "Buddy" in names
+        assert "Buddy2" in names
+
+    def test_filter_combined(self, client):
+        client.post("/api/v1/pets/", json={"name": "Buddy", "type": "dog", "age": 3})
+        client.post("/api/v1/pets/", json={"name": "Max", "type": "dog", "age": 5})
+
+        response = client.get("/api/v1/pets/?type=dog&age=3")
+        assert response.status_code == 200
+        pets = response.json()
+        assert len(pets) == 1
+        assert pets[0]["name"] == "Buddy"
