@@ -23,6 +23,8 @@ PetShop/
 ├── tests/                  # Test suite (pytest)
 │   ├── conftest.py         # Test fixtures and configuration
 │   └── test_pets.py        # Pet endpoint tests
+├── scripts/                 # Utility scripts
+│   └── seed_pets.py        # Seed database with sample pets
 ├── static/                 # Static files (HTML, CSS, JS)
 │   └── favicon.ico         # Website favicon
 ├── .env.example            # Environment variables template
@@ -70,6 +72,16 @@ Or use the startup script:
 ./start.sh
 ```
 
+## Seeding the Database
+
+To add sample pets to the database, run the seed script:
+
+```bash
+python scripts/seed_pets.py
+```
+
+This will add 50 pets with various types (dogs, cats, rabbits, hamsters, fish, birds), ages, and names.
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
@@ -80,6 +92,12 @@ Or use the startup script:
 | PUT | `/api/v1/pets/{id}` | Update a pet |
 | DELETE | `/api/v1/pets/{id}` | Delete a pet |
 | GET | `/` | Health check |
+
+## Deployment
+
+The application is deployed on Render: **https://petshop-0jtd.onrender.com**
+
+API Documentation (Swagger UI): **https://petshop-0jtd.onrender.com/docs**
 
 ## Running Tests
 
