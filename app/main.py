@@ -8,7 +8,7 @@ import app.models  # noqa: F401 — ensure all models are registered with Base
 
 
 def create_app() -> FastAPI:
-    # Create all tables on startup (migrate properly with Alembic in production)
+    # Create all tables on startup (use Alembic migrations in production)
     Base.metadata.create_all(bind=engine)
 
     application = FastAPI(
