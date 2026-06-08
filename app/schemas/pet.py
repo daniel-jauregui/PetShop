@@ -20,5 +20,4 @@ class PetUpdate(PetBase):
 class PetResponse(PetBase):
     """Schema returned to the client — includes the database-assigned id."""
     id: int
-
     model_config = {"from_attributes": True}

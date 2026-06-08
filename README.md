@@ -71,6 +71,18 @@ Or use the startup script:
 ```bash
 ./start.sh
 ```
+## 🔒 Authentication
+
+The API uses JSON Web Tokens (JWT) and `bcrypt` for secure user authentication.
+
+### Security Constraints
+* **Password Hashing:** Handled via `passlib` using the `bcrypt` algorithm.
+* **Password Length:** Strictly validated between 8 and 72 characters at the schema level to match `bcrypt` byte boundaries and prevent silent truncation.
+* **Token Lifetime:** Access tokens expire after 30 minutes.
+
+The API exposes the following endpoints under the `/api/v1/auth` prefix:
+* `POST /register`: Registers a new user, hashes the password, and stores it in the database. Returns a `400 Bad Request` if the username is taken.
+* `POST /token`: Validates user credentials using standard OAuth2 form data (`application/x-www-form-urlencoded`). Returns a signed JWT access token on success, or a `401 Unauthorized` error on failure.
 
 ## Seeding the Database
 
