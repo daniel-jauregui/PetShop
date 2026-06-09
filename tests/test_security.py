@@ -10,43 +10,43 @@ from app.core.config import settings
 
 
 def test_password_hashing_and_verification():
-    """Prueba que una contraseña se encripte correctamente y se pueda verificar."""
-    password_plano = "mi_secreto_123"
+    """Tests that a password is encrypted correctly and can be verified."""
+    plain_password = "my_secret_123"
 
-    # 1. Generar el hash
-    hash_resultado = get_password_hash(password_plano)
+    # 1. Generate the hash
+    hashed_password = get_password_hash(plain_password)
 
-    # El hash no debe ser igual al texto plano
-    assert hash_resultado != password_plano
+    # The hash must not be equal to the plain text
+    assert hashed_password != plain_password
 
-    # 2. Verificar coincidencia correcta
-    assert verify_password(password_plano, hash_resultado) is True
+    # 2. Verify correct match
+    assert verify_password(plain_password, hashed_password) is True
 
-    # 3. Verificar que falle con una contraseña incorrecta
-    assert verify_password("otra_contraseña", hash_resultado) is False
+    # 3. Verify that it fails with an incorrect password
+    assert verify_password("another_password", hashed_password) is False
 
 
 def test_create_access_token_success():
-    """Prueba que el token JWT se cree con la estructura y datos correctos."""
-    usuario_id = "user_99"
+    """Tests that the JWT token is created with the correct structure and data."""
+    user_id = "user_99"
 
-    # Generar el token
-    token = create_access_token(subject=usuario_id)
+    # Generate token
+    token = create_access_token(subject=user_id)
     assert isinstance(token, str)
 
-    # Decodificar el token localmente para validar su contenido (Payload)
+    # Decode the token locally to validate its payload content
     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
 
-    assert payload.get("sub") == usuario_id
+    assert payload.get("sub") == user_id
     assert "exp" in payload
 
 
 def test_create_access_token_with_custom_expires():
-    """Prueba la creación del token pasando un tiempo de expiración personalizado."""
-    usuario_id = "user_100"
-    tiempo_personalizado = timedelta(minutes=10)
+    """Tests token creation passing a custom expiration time."""
+    user_id = "user_100"
+    custom_expire = timedelta(minutes=10)
 
-    token = create_access_token(subject=usuario_id, expires_delta=tiempo_personalizado)
+    token = create_access_token(subject=user_id, expires_delta=custom_expire)
     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
 
-    assert payload.get("sub") == usuario_id
+    assert payload.get("sub") == user_id

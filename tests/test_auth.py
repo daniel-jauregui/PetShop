@@ -8,13 +8,13 @@ client = TestClient(app)
 
 
 def test_register_user_success():
-    """Prueba que un usuario se pueda registrar exitosamente."""
-    # Generamos un username único por cada corrida (ej. user_4a12b...)
+    """Tests that a user can register successfully."""
+    # Generate a unique username for each run (e.g. user_4a12b...)
     unique_username = f"user_{uuid.uuid4().hex[:8]}"
 
     payload = {
         "username": unique_username,
-        "password": "password_seguro_123"
+        "password": "secure_password_123"
     }
     response = client.post("/api/v1/auth/register", json=payload)
 
@@ -27,17 +27,17 @@ def test_register_user_success():
 
 
 def test_register_user_already_exists():
-    """Prueba que no se permita registrar un username que ya existe."""
+    """Tests that registering an already existing username is not allowed."""
     unique_username = f"user_{uuid.uuid4().hex[:8]}"
     payload = {
         "username": unique_username,
-        "password": "password_seguro_123"
+        "password": "secure_password_123"
     }
 
-    # Primer registro (Exitoso)
+    # First registration (Successful)
     client.post("/api/v1/auth/register", json=payload)
 
-    # Intento de segundo registro con el mismo username exacto (Debe fallar)
+    # Attempt second registration with the exact same username (Must fail)
     response = client.post("/api/v1/auth/register", json=payload)
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -45,14 +45,14 @@ def test_register_user_already_exists():
 
 
 def test_login_success():
-    """Prueba que un usuario registrado pueda obtener su token JWT."""
+    """Tests that a registered user can obtain their JWT token."""
     unique_username = f"user_{uuid.uuid4().hex[:8]}"
-    password = "mi_super_password"
+    password = "my_super_password"
 
-    # Registrar al usuario dinámico primero
+    # Register dynamic user first
     client.post("/api/v1/auth/register", json={"username": unique_username, "password": password})
 
-    # Intentar hacer Login
+    # Attempt to Login
     login_data = {
         "username": unique_username,
         "password": password

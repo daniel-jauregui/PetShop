@@ -12,8 +12,8 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
-    """Registra un nuevo usuario en el sistema local."""
-    # 1. Verificar si el usuario ya existe
+    """Registers a new user in the local system."""
+    # 1. Check if the user already exists
     existing_user = db.query(User).filter(User.username == user_data.username).first()
     if existing_user:
         raise HTTPException(
@@ -21,10 +21,10 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
             detail="Username already registered."
         )
 
-    # 2. Encriptar la contraseña limpia antes de guardarla
+    # 2. Hash the raw password before saving it
     hashed_pwd = get_password_hash(user_data.password)
 
-    # 3. Crear la instancia del modelo y persistirla
+    # 3. Create model instance and persist it
     new_user = User(username=user_data.username, hashed_password=hashed_pwd)
     db.add(new_user)
     db.commit()
@@ -35,14 +35,14 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/token", response_model=Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    """Verifica las credenciales y retorna un token de acceso JWT.
+    """Verifies credentials and returns a JWT access token.
 
-    Usa OAuth2PasswordRequestForm para integrarse nativamente con la UI de Swagger docs.
+    Uses OAuth2PasswordRequestForm for native integration with the Swagger docs UI.
     """
-    # 1. Buscar al usuario por su username
+    # 1. Look up user by username
     user = db.query(User).filter(User.username == form_data.username).first()
 
-    # 2. Validar existencia y contraseña
+    # 2. Validate existence and password
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -50,7 +50,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # 3. Generar el JWT usando el username como 'subject'
+    # 3. Generate JWT using username as 'subject'
     access_token = create_access_token(subject=user.username)
 
     return {"access_token": access_token, "token_type": "bearer"}

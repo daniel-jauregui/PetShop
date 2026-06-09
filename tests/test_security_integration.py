@@ -1,7 +1,7 @@
 import pytest
 
 def test_products_endpoints_require_authentication(client):
-    """Verifica que todos los endpoints de productos retornen 401 si no hay token."""
+    """Verifies that all product endpoints return 401 if token is missing."""
     
     # 1. GET /products/
     response = client.get("/api/v1/products/")
