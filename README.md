@@ -1,39 +1,39 @@
 # PetShop API
 
-A FastAPI-based REST API for managing pets in a pet shop application.
+A FastAPI-based REST API for managing products in a pet shop application.
 
 ## Project Structure
 
 ```
 PetShop/
-├── app/                    # Main application code
-│   ├── api/                # API endpoints
-│   │   └── v1/pets.py      # Pet endpoints (CRUD operations)
+├── app/                        # Main application code
+│   ├── api/                    # API endpoints
+│   │   └── v1/products.py      # Product endpoints (CRUD operations)
 │   ├── core/
-│   │   └── config.py       # Configuration and settings
+│   │   └── config.py           # Configuration and settings
 │   ├── db/
-│   │   └── session.py      # Database session setup
+│   │   └── session.py          # Database session setup
 │   ├── models/
-│   │   └── pet.py          # Pet database model (SQLAlchemy)
+│   │   └── product.py          # Product database model (SQLAlchemy)
 │   ├── schemas/
-│   │   └── pet.py          # Pydantic request/response schemas
+│   │   └── product.py          # Pydantic request/response schemas
 │   ├── services/
-│   │   └── pet_service.py  # Business logic layer
-│   └── main.py             # FastAPI app entry point
-├── tests/                  # Test suite (pytest)
-│   ├── conftest.py         # Test fixtures and configuration
-│   └── test_pets.py        # Pet endpoint tests
-├── scripts/                 # Utility scripts
-│   └── seed_pets.py        # Seed database with sample pets
-├── static/                 # Static files (HTML, CSS, JS)
-│   └── favicon.ico         # Website favicon
-├── .env.example            # Environment variables template
-├── .gitignore              # Git ignore rules
-├── pytest.ini              # Pytest configuration
-├── requirements.txt        # Python dependencies
-├── render.yaml             # Render deployment config
-├── start.sh                # Application startup script
-└── petshop.db              # SQLite database file
+│   │   └── product_service.py  # Business logic layer
+│   └── main.py                 # FastAPI app entry point
+├── tests/                      # Test suite (pytest)
+│   ├── conftest.py             # Test fixtures and configuration
+│   └── test_products.py        # Product endpoint tests
+├── scripts/                    # Utility scripts
+│   └── seed_products.py        # Seed database with sample products
+├── static/                     # Static files (HTML, CSS, JS)
+│   └── favicon.ico             # Website favicon
+├── .env.example                # Environment variables template
+├── .gitignore                  # Git ignore rules
+├── pytest.ini                  # Pytest configuration
+├── requirements.txt            # Python dependencies
+├── render.yaml                 # Render deployment config
+├── start.sh                    # Application startup script
+└── petshop.db                  # SQLite database file
 ```
 
 ## Architecture
@@ -50,7 +50,7 @@ The project follows a layered architecture pattern:
 - **Framework**: FastAPI
 - **Database**: SQLite
 - **ORM**: SQLAlchemy
-- **Validation**: Pydantic
+- **Validation**: Pydantic V2
 - **Testing**: pytest
 
 ## Setup
@@ -86,23 +86,23 @@ The API exposes the following endpoints under the `/api/v1/auth` prefix:
 
 ## Seeding the Database
 
-To add sample pets to the database, run the seed script:
+To add sample products to the database, run the seed script:
 
 ```bash
-python scripts/seed_pets.py
+python scripts/seed_products.py
 ```
 
-This will add 50 pets with various types (dogs, cats, rabbits, hamsters, fish, birds), ages, and names.
+This will clear existing products and add a realistic catalog of products across various categories (food, toys, accessories, medicine) and pet types (dogs, cats, birds, rabbits, fish, etc.).
 
 ## API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/v1/pets/` | List all pets |
-| GET | `/api/v1/pets/{id}` | Get a pet by ID |
-| POST | `/api/v1/pets/` | Create a new pet |
-| PUT | `/api/v1/pets/{id}` | Update a pet |
-| DELETE | `/api/v1/pets/{id}` | Delete a pet |
+| GET | `/api/v1/products/` | List all products (supports filtering by name, category, pet_type) |
+| GET | `/api/v1/products/{id}` | Get a product by ID |
+| POST | `/api/v1/products/` | Create a new product |
+| PUT | `/api/v1/products/{id}` | Update a product |
+| DELETE | `/api/v1/products/{id}` | Delete a product |
 | GET | `/` | Health check |
 
 ## Deployment

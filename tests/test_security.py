@@ -4,10 +4,9 @@ import jwt
 from utils.security import (
     get_password_hash,
     verify_password,
-    create_access_token,
-    SECRET_KEY,
-    ALGORITHM
+    create_access_token
 )
+from app.core.config import settings
 
 
 def test_password_hashing_and_verification():
@@ -36,7 +35,7 @@ def test_create_access_token_success():
     assert isinstance(token, str)
 
     # Decodificar el token localmente para validar su contenido (Payload)
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
 
     assert payload.get("sub") == usuario_id
     assert "exp" in payload
@@ -48,6 +47,6 @@ def test_create_access_token_with_custom_expires():
     tiempo_personalizado = timedelta(minutes=10)
 
     token = create_access_token(subject=usuario_id, expires_delta=tiempo_personalizado)
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
 
     assert payload.get("sub") == usuario_id

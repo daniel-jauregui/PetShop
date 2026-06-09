@@ -48,8 +48,36 @@ def client(db_session):
 
 
 @pytest.fixture()
-def sample_pet(client) -> dict:
-    """Create one pet and return the response JSON."""
-    response = client.post("/api/v1/pets/", json={"name": "Buddy", "type": "dog", "age": 3})
+def test_user(client):
+    """Create a test user and return its data."""
+    user_data = {"username": "testuser", "password": "testpassword123"}
+    client.post("/api/v1/auth/register", json=user_data)
+    return user_data
+
+
+@pytest.fixture()
+def auth_headers(client, test_user):
+    """Return headers with a valid JWT token."""
+    login_data = {"username": test_user["username"], "password": test_user["password"]}
+    response = client.post("/api/v1/auth/token", data=login_data)
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture()
+def sample_product(client, auth_headers) -> dict:
+    """Create one product and return the response JSON."""
+    response = client.post(
+        "/api/v1/products/", 
+        json={
+            "name": "Dog Toy Bone",
+            "description": "Durable rubber bone for dogs",
+            "price": 12.99,
+            "stock": 25,
+            "category": "toys",
+            "pet_type": "dog"
+        },
+        headers=auth_headers
+    )
     assert response.status_code == 201
     return response.json()
